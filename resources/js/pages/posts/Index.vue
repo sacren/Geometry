@@ -57,8 +57,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                 No posts found.
             </div>
 
-            <div v-for="post in posts.data" :key="post.id" class="space-y-6">
-                <article class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+            <div v-if="posts.data.length" class="space-y-8">
+                <article
+                    v-for="post in posts.data"
+                    :key="post.id"
+                    class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200"
+                >
                     <header class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6">
                         <h2 class="text-2xl font-bold leading-tight">{{ post.title }}</h2>
                         <div class="mt-1 text-blue-100">
@@ -77,20 +81,19 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <!-- Pagination -->
-            <nav v-if="posts.links.length > 3"
-                 class="flex justify-center mt-12 space-x-2"
-                 aria-label="Pagination">
+            <nav
+                v-if="posts.links.length > 3"
+                class="flex justify-center mt-12 space-x-2"
+                aria-label="Pagination"
+            >
                 <template v-for="(link, index) in posts.links" :key="index">
                     <InertiaLink
                         v-if="link.url"
                         :href="link.url"
                         :aria-label="`Go to page ${link.label}`"
                         v-html="link.label"
-                        :class="[ 'px-3 py-1 text-sm border rounded transition',
-                                link.active
-                                ? 'bg-blue-600 text-white border-blue-600'
-                                : 'text-blue-600 hover:bg-blue-50', ]">
-                    </InertiaLink>
+                        :class="[ 'px-3 py-1 text-sm border rounded transition', link.active ? 'bg-blue-600 text-white border-blue-600' : 'text-blue-600 hover:bg-blue-50', ]"
+                    />
                     <span
                         v-else
                         v-html="link.label"
