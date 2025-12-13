@@ -3,30 +3,7 @@ import { Head, Link as InertiaLink } from '@inertiajs/vue3';
 import { useDateFormatter } from '@/composables/useDateFormatter';
 import AppLayout from '@/layouts/AppLayout.vue';
 import PostForm from '@/components/posts/PostForm.vue';
-import type { BreadcrumbItem, User } from '@/types';
-
-interface Post {
-    id: number;
-    title: string;
-    content: string;
-    created_at: string;
-    user: User;
-}
-
-interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
-
-interface PaginatedPosts {
-    data: Post[];
-    links: PaginationLink[];
-}
-
-interface PostsType {
-    posts: PaginatedPosts;
-}
+import type { PostsType, BreadcrumbItem } from '@/types';
 
 defineProps<PostsType>();
 
