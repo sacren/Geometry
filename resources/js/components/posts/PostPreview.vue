@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { useDateFormatter } from '@/composables/useDateFormatter';
 import type { Post } from '@/types';
+import type { PropType } from 'vue';
 
-defineProps<{
-    post: Post;
-}>();
+defineProps({
+    post: {
+        type: Object as PropType<Post>,
+        required: true,
+    },
+});
 
 const { formatDate } = useDateFormatter();
 </script>
