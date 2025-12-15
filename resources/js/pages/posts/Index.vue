@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { Head, Link as InertiaLink } from '@inertiajs/vue3';
-import { useDateFormatter } from '@/composables/useDateFormatter';
 import AppLayout from '@/layouts/AppLayout.vue';
 import PostForm from '@/components/posts/PostForm.vue';
+import PostPreview from '@/components/posts/PostPreview.vue';
 import type { PostsType, BreadcrumbItem } from '@/types';
 
 defineProps<PostsType>();
-
-const { formatDate } = useDateFormatter();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -35,26 +33,11 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <div v-if="posts.data.length" class="space-y-8">
-                <article
+                <PostPreview
                     v-for="post in posts.data"
                     :key="post.id"
-                    class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200"
-                >
-                    <header class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6">
-                        <h2 class="text-2xl font-bold leading-tight">{{ post.title }}</h2>
-                        <div class="mt-1 text-blue-100">
-                            By <span class="font-semibold">{{ post.user.name }}</span>
-                            on <time :datetime="post.created_at">
-                                {{ formatDate(post.created_at) }}
-                            </time>
-                        </div>
-                    </header>
-
-                    <!-- Post content -->
-                    <div class="p-6">
-                        <p class="text-gray-700 leading-relaxed">{{ post.content }}</p>
-                    </div>
-                </article>
+                    :post="post"
+                />
             </div>
 
             <!-- Pagination -->
