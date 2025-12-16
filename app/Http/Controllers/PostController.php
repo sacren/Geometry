@@ -17,7 +17,7 @@ class PostController extends Controller
         $posts = Post::with('user:id,name,email')
             ->select('posts.*')
             ->latest()
-            ->paginate(10)
+            ->paginate(3)
             ->withQueryString();
 
         return Inertia::render('posts/Index', [
