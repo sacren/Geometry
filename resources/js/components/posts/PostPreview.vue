@@ -3,13 +3,14 @@ import { useDateFormatter } from '@/composables/useDateFormatter';
 import type { Post } from '@/types';
 import type { PropType } from 'vue';
 
-defineProps({
+const props = defineProps({
     post: {
         type: Object as PropType<Post>,
         required: true,
     },
 });
 
+const authorName = props.post.user?.name || 'Unknown author';
 const { formatDate } = useDateFormatter();
 </script>
 
@@ -18,7 +19,7 @@ const { formatDate } = useDateFormatter();
         <header class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6">
             <h2 class="text-2xl font-bold leading-tight">{{ post.title }}</h2>
             <div class="mt-1 text-blue-100">
-                By <span class="font-semibold">{{ post.user.name }}</span> on
+                By <span class="font-semibold">{{ authorName }}</span> on
                 <time :datetime="post.created_at">
                     {{ formatDate(post.created_at) }}
                 </time>
