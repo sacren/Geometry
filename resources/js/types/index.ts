@@ -41,7 +41,7 @@ export interface Post {
     title: string;
     content: string;
     created_at: string;
-    user: User;
+    user: User | null;
 }
 
 export interface PaginationLink {
