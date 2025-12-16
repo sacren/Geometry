@@ -12,6 +12,7 @@ const props = defineProps({
 
 const authorName = props.post.user?.name || 'Unknown author';
 const { formatDate } = useDateFormatter();
+const formattedDate = formatDate(props.post.created_at);
 </script>
 
 <template>
@@ -21,7 +22,7 @@ const { formatDate } = useDateFormatter();
             <div class="mt-1 text-blue-100">
                 By <span class="font-semibold">{{ authorName }}</span> on
                 <time :datetime="post.created_at">
-                    {{ formatDate(post.created_at) }}
+                    {{ formattedDate }}
                 </time>
             </div>
         </header>
