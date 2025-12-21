@@ -60,3 +60,16 @@ export interface PostsType {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface FlashMessages {
+    success: string | null;
+    error: string | null;
+    warning: string | null;
+    info: string | null;
+}
+
+declare module '@inertiajs/core' {
+    interface PageProps {
+        flash: FlashMessages;
+  }
+}
