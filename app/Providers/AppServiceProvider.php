@@ -22,12 +22,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Inertia::share([
-            'flash' => fn () => [
+            'flash' => fn () => array_filter([
                 'success' => Session::get('success'),
                 'error' => Session::get('error'),
                 'warning' => Session::get('warning'),
                 'info' => Session::get('info'),
-            ],
+            ], fn ($value) => filled($value)),
         ]);
     }
 }
