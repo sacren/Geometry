@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
-
-interface FlashMessages {
-    success: string | null;
-    error: string | null;
-    warning: string | null;
-    info: string | null;
-}
+import type { FlashMessages } from '@/types';
 
 defineProps({
     flash: {
