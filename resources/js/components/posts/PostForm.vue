@@ -11,7 +11,6 @@ const props = withDefaults(defineProps<FormProps>(), {
 });
 
 const form = reactive({
-    title: '',
     content: '',
 });
 
@@ -19,7 +18,6 @@ const handleSubmit = () => {
     router.post('/posts', form, {
         preserveScroll: true,
         onSuccess: () => {
-            form.title = '';
             form.content = '';
             props.onSuccess();
         },
