@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Head, Link as InertiaLink, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import FlashMessages from '@/components/posts/FlashMessages.vue';
 import PostForm from '@/components/posts/PostForm.vue';
 import PostPreview from '@/components/posts/PostPreview.vue';
 import type { PostsType, BreadcrumbItem } from '@/types';
 
-const { flash } = usePage().props;
+const flash = computed(() => usePage().props.flash);
 
 defineProps<PostsType>();
 
