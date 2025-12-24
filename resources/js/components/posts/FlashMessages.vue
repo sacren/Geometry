@@ -2,6 +2,7 @@
 import { ref, watch, onBeforeUnmount } from 'vue';
 import type { PropType } from 'vue';
 import type { FlashMessages } from '@/types';
+import { EMPTY_FLASH } from '@/types';
 
 const props = defineProps({
     flash: {
@@ -23,12 +24,7 @@ const clearTimeoutIfExists = () => {
 };
 
 const clearFlash = () => {
-    localFlash.value = {
-        success: null,
-        error: null,
-        warning: null,
-        info: null,
-    };
+    localFlash.value = { ...EMPTY_FLASH };
 };
 
 const scheduleAutoHide = () => {
