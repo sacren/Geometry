@@ -68,6 +68,13 @@ export interface FlashMessages {
     info: string | null;
 }
 
+export const EMPTY_FLASH: FlashMessages = {
+    success: null,
+    error: null,
+    warning: null,
+    info: null,
+};
+
 declare module '@inertiajs/core' {
     interface PageProps {
         flash: FlashMessages;
