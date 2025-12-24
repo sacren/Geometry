@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onBeforeUnmount } from 'vue';
+import { ref, watch, onBeforeUnmount, computed } from 'vue';
 import type { PropType } from 'vue';
 import type { FlashMessages } from '@/types';
 import { EMPTY_FLASH } from '@/types';
@@ -32,19 +32,27 @@ const scheduleAutoHide = () => {
     timeoutId = window.setTimeout(clearFlash, 5000);
 };
 
+// Helper to check if any message exists
+const hasMessage = computed(() =>
+    Boolean(
+        localFlash.value.success ||
+        localFlash.value.error ||
+        localFlash.value.warning ||
+        localFlash.value.info
+    )
+);
+
 // Watch for new flash messages
 watch(
     () => props.flash,
     (newFlash) => {
         localFlash.value = { ...newFlash };
-        // Only schedule auto-hide if at least one message is non-null
-        if (
-            newFlash.success ||
-            newFlash.error ||
-            newFlash.warning ||
-            newFlash.info
-        ) {
+
+        if (hasMessage.value) {
             scheduleAutoHide();
+        } else {
+            // If parent clears flash, we ensure timer is killed
+            clearTimeoutIfExists();
         }
     },
     { immediate: true }
