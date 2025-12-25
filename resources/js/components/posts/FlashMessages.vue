@@ -32,6 +32,15 @@ const scheduleAutoHide = () => {
     timeoutId = window.setTimeout(clearFlash, 5000);
 };
 
+// UX: Pause/Resume the timer if the user hovers over/off the message
+const pauseTimer = () => clearTimeoutIfExists();
+
+const resumeTimer = () => {
+    if (hasMessage.value) {
+        scheduleAutoHide();
+    }
+};
+
 // Helper to check if any message exists
 const hasMessage = computed(() =>
     Boolean(
@@ -64,16 +73,36 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div v-if="localFlash.success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+    <div
+        v-if="localFlash.success"
+        class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
+        @mouseenter="pauseTimer"
+        @mouseleave="resumeTimer"
+    >
         {{ localFlash.success }}
     </div>
-    <div v-if="localFlash.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <div
+        v-if="localFlash.error"
+        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+        @mouseenter="pauseTimer"
+        @mouseleave="resumeTimer"
+    >
         {{ localFlash.error }}
     </div>
-    <div v-if="localFlash.warning" class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+    <div
+        v-if="localFlash.warning"
+        class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4"
+        @mouseenter="pauseTimer"
+        @mouseleave="resumeTimer"
+    >
         {{ localFlash.warning }}
     </div>
-    <div v-if="localFlash.info" class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+    <div
+        v-if="localFlash.info"
+        class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4"
+        @mouseenter="pauseTimer"
+        @mouseleave="resumeTimer"
+    >
         {{ localFlash.info }}
     </div>
 </template>
