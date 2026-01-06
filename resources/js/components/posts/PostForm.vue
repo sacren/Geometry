@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 
 interface FormProps {
     onSuccess?: () => void;
@@ -10,20 +9,24 @@ const props = withDefaults(defineProps<FormProps>(), {
     onSuccess: () => {},
 });
 
-const form = reactive({
+// Define the form data structure
+interface PostFormData {
+    content: string;
+}
+
+const form = useForm<PostFormData>({
     content: '',
 });
 
 const handleSubmit = () => {
-    router.post('/posts', form, {
+    form.post('/posts', {
         preserveScroll: true,
         onSuccess: () => {
-            form.content = '';
+            form.reset('content');
             props.onSuccess();
         },
-        onError: (errors) => {
-            console.log(errors);
-        },
+        // Note: onError for field-level errors is handled automatically by useForm
+        // We don't need to manually log or assign them — they appear in form.errors
     });
 };
 </script>
@@ -39,14 +42,15 @@ const handleSubmit = () => {
                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="What's on your mind?"
             />
-            <div v-if="$page.props.errors.content" class="text-red-600 text-sm mt-1" role="alert">
-                {{ $page.props.errors.content }}
+            <div v-if="form.errors.content" class="text-red-600 text-sm mt-1" role="alert">
+                {{ form.errors.content }}
             </div>
         </div>
 
         <button
             type="submit"
             class="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            :disabled="form.processing"
         >
             Create Post
         </button>
