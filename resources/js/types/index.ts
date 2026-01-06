@@ -55,7 +55,7 @@ export interface PaginatedPosts {
     links: PaginationLink[];
 }
 
-export interface PostsType {
+export interface PostsIndexProps {
     posts: PaginatedPosts;
 }
 

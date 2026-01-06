@@ -5,11 +5,11 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import FlashMessages from '@/components/posts/FlashMessages.vue';
 import PostForm from '@/components/posts/PostForm.vue';
 import PostPreview from '@/components/posts/PostPreview.vue';
-import type { PostsType, BreadcrumbItem } from '@/types';
+import type { PostsIndexProps, BreadcrumbItem } from '@/types';
 
 const flash = computed(() => usePage().props.flash);
 
-defineProps<PostsType>();
+defineProps<PostsIndexProps>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
