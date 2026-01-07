@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { Head, Link as InertiaLink, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Head, Link as InertiaLink } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import FlashMessages from '@/components/posts/FlashMessages.vue';
 import PostForm from '@/components/posts/PostForm.vue';
 import PostPreview from '@/components/posts/PostPreview.vue';
 import type { PostsIndexProps, BreadcrumbItem } from '@/types';
-
-const flash = computed(() => usePage().props.flash);
 
 defineProps<PostsIndexProps>();
 
@@ -24,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4 sm:p-6 max-w-4xl mx-auto space-y-8">
             <!-- Flash messages -->
-            <FlashMessages :flash="flash" />
+            <FlashMessages />
             <h1 class="text-2xl font-bold mb-6">All Posts</h1>
 
             <!-- Create new post form -->
