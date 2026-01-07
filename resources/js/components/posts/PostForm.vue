@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-
-interface FormProps {
-    onSuccess?: () => void;
-}
-
-const props = withDefaults(defineProps<FormProps>(), {
-    onSuccess: () => {},
-});
+import { useFlash } from '@/composables/useFlash';
 
 // Define the form data structure
 interface PostFormData {
@@ -18,12 +11,16 @@ const form = useForm<PostFormData>({
     content: '',
 });
 
+const { setFlash } = useFlash();
+
 const handleSubmit = () => {
     form.post('/posts', {
         preserveScroll: true,
         onSuccess: () => {
             form.reset('content');
-            props.onSuccess();
+            setFlash({
+                success: 'Post created successfully.'
+            });
         },
         // Note: onError for field-level errors is handled automatically by useForm
         // We don't need to manually log or assign them — they appear in form.errors
