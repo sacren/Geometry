@@ -44,7 +44,7 @@ class PostController extends Controller
         assert($user instanceof User);
         $user->posts()->create($request->validated());
 
-        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+        return to_route('posts.index')->with('success', 'Post created successfully.');
     }
 
     /**
