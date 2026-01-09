@@ -30,4 +30,17 @@ class StorePostRequest extends FormRequest
             ],
         ];
     }
+
+    /**
+     * Get custom error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'content.required' => 'You must write a post.',
+            'content.max' => 'The post cannot be greater than 10,000 characters.',
+        ];
+    }
 }
