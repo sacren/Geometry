@@ -26,6 +26,7 @@ class StorePostRequest extends FormRequest
             'content' => [
                 'required',
                 'string',
+                'max:10000',
             ],
         ];
     }
