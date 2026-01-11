@@ -6,11 +6,15 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -72,10 +76,19 @@ class PostController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the given post after authorizing the action.
+     *
+     * This method checks if the authenticated user is authorized to delete
+     * the post via the PostPolicy, permanently removes it from storage,
+     * and redirects back to the posts index with a success message.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
-        //
+        $this->authorize('delete', $post);
+        $post->delete();
+        return to_route('posts.index')->with('success', 'Post deleted successfully.');
     }
 }
