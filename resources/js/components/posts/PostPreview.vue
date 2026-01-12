@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { router } from '@inertiajs/vue3';
 import { useDateFormatter } from '@/composables/useDateFormatter';
 import type { Post } from '@/types';
 import type { PropType } from 'vue';
@@ -13,6 +14,12 @@ const props = defineProps({
 const authorName = props.post.user?.name || 'Unknown author';
 const { formatDate } = useDateFormatter();
 const formattedDate = formatDate(props.post.created_at);
+
+const confirmDelete = () => {
+    if (confirm('Are you sure you want to delete this post?')) {
+        router.delete(`/posts/${props.post.id}`);
+    }
+}
 </script>
 
 <template>
@@ -30,6 +37,17 @@ const formattedDate = formatDate(props.post.created_at);
         <!-- Post content -->
         <div class="p-6">
             <p class="text-gray-700 leading-relaxed">{{ post.content }}</p>
+        </div>
+
+        <!-- Delete button (only for owner) -->
+        <div v-if="$page.props.auth.user?.id === post.user_id" class="px-6 pb-6">
+            <button
+                type="button"
+                @click="confirmDelete"
+                class="text-sm text-red-600 hover:text-red-800 font-medium"
+            >
+                Delete Post
+            </button>
         </div>
     </article>
 </template>
