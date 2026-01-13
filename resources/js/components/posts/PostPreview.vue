@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
 import { useDateFormatter } from '@/composables/useDateFormatter';
+import { useFlash } from '@/composables/useFlash';
 import type { Post } from '@/types';
 import type { PropType } from 'vue';
 
@@ -11,13 +12,20 @@ const props = defineProps({
     },
 });
 
+const { setFlash } = useFlash();
+
 const authorName = props.post.user?.name || 'Unknown author';
 const { formatDate } = useDateFormatter();
 const formattedDate = formatDate(props.post.created_at);
 
 const confirmDelete = () => {
     if (confirm('Are you sure you want to delete this post?')) {
-        router.delete(`/posts/${props.post.id}`);
+        router.delete(`/posts/${props.post.id}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setFlash({ success: 'Post deleted successfully.' });
+            },
+        });
     }
 }
 </script>
