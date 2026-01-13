@@ -18,11 +18,11 @@ const authorName = props.post.user?.name || 'Unknown author';
 const { formatDate } = useDateFormatter();
 const formattedDate = formatDate(props.post.created_at);
 
-const confirmDelete = () => {
+const confirmDelete = (): void => {
     if (confirm('Are you sure you want to delete this post?')) {
         router.delete(`/posts/${props.post.id}`, {
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (): void => {
                 setFlash({ success: 'Post deleted successfully.' });
             },
         });
