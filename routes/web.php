@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,5 +19,13 @@ Route::get('dashboard', function () {
 Route::resource('posts', PostController::class)
     ->only(['index', 'store', 'destroy'])
     ->middleware(['auth', 'verified']);
+
+// 👇 LIKE/UNLIKE ROUTES — nested, semantic, and secured
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/posts/{post}/likes', [LikeController::class, 'store'])
+        ->name('posts.like');
+    Route::delete('/posts/{post}/likes', [LikeController::class, 'destroy'])
+        ->name('posts.unlike');
+});
 
 require __DIR__.'/settings.php';
