@@ -42,6 +42,8 @@ export interface Post {
     title: string;
     content: string;
     created_at: string;
+    liked_by_current_user: boolean;
+    likes_count: number;
     user: User | null;
 }
 
