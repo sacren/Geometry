@@ -36,6 +36,12 @@ export interface User {
     updated_at: string;
 }
 
+export interface Likeable {
+    id: number;
+    liked_by_current_user: boolean;
+    likes_count: number;
+}
+
 export interface Post {
     id: number;
     user_id: number;
