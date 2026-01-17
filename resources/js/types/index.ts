@@ -42,8 +42,7 @@ export interface Likeable {
     likes_count: number;
 }
 
-export interface Post {
-    id: number;
+export interface Post extends Likeable {
     user_id: number;
     title: string;
     content: string;
