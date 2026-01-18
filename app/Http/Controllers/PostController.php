@@ -21,10 +21,16 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('user:id,name,email')
-            ->select('posts.*')
+            ->withCount('likes') // 👈 adds `likes_count` attribute
             ->latest()
             ->paginate(3)
             ->withQueryString();
+
+        // 👇 Add `liked_by_current_user` to each post
+        $posts->getCollection()->transform(function ($post) {
+            $post->liked_by_current_user = $post->likedByCurrentUser();
+            return $post;
+        });
 
         return Inertia::render('posts/Index', [
             'posts' => $posts,
