@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
+import LikeButton from '@/components/LikeButton.vue'; // 👈 import
 import { useDateFormatter } from '@/composables/useDateFormatter';
 import { useFlash } from '@/composables/useFlash';
 import type { Post } from '@/types';
@@ -45,6 +46,11 @@ const confirmDelete = (): void => {
         <!-- Post content -->
         <div class="p-6">
             <p class="text-gray-700 leading-relaxed">{{ post.content }}</p>
+        </div>
+
+        <!-- 👇 Like button (now a child component) -->
+        <div class="px-6 pb-4">
+            <LikeButton :item="post" />
         </div>
 
         <!-- Delete button (only for owner) -->
