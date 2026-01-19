@@ -3,6 +3,7 @@ import { router } from '@inertiajs/vue3';
 import LikeButton from '@/components/LikeButton.vue'; // 👈 import
 import { useDateFormatter } from '@/composables/useDateFormatter';
 import { useFlash } from '@/composables/useFlash';
+import { useAuth } from '@/composables/useAuth';
 import type { Post } from '@/types';
 import type { PropType } from 'vue';
 
@@ -12,6 +13,9 @@ const props = defineProps({
         required: true,
     },
 });
+
+const { isOwnerOf } = useAuth();
+const isOwnPost = isOwnerOf(props.post.user_id);
 
 const { setFlash } = useFlash();
 
@@ -49,12 +53,12 @@ const confirmDelete = (): void => {
         </div>
 
         <!-- 👇 Like button (now a child component) -->
-        <div class="px-6 pb-4">
+        <div v-if="!isOwnPost" class="px-6 pb-4">
             <LikeButton :item="post" />
         </div>
 
         <!-- Delete button (only for owner) -->
-        <div v-if="$page.props.auth.user?.id === post.user_id" class="px-6 pb-6">
+        <div v-if="isOwnPost" class="px-6 pb-6">
             <button
                 type="button"
                 @click="confirmDelete"
