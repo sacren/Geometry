@@ -82,7 +82,7 @@ export const EMPTY_FLASH: FlashMessages = {
 };
 
 declare module '@inertiajs/core' {
-    interface PageProps {
+    interface PageProps extends AppPageProps {
         flash: FlashMessages;
   }
 }
