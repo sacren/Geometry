@@ -19,6 +19,11 @@ class LikeController extends Controller
      */
     public function store(Post $post): RedirectResponse
     {
+        // 🔒 Prevent liking own post
+        if ($post->user_id === Auth::id()) {
+            return back()->with('error', 'You cannot like your own post.');
+        }
+
         $post->likes()->firstOrCreate(['user_id' => Auth::id()]);
         return back();
     }
@@ -33,6 +38,11 @@ class LikeController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
+        // 🔒 Prevent liking own post
+        if ($post->user_id === Auth::id()) {
+            return back()->with('error', 'You cannot like your own post.');
+        }
+
         $post->likes()->where('user_id', Auth::id())->delete();
         return back();
     }
