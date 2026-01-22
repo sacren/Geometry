@@ -63,4 +63,17 @@ class PostPolicy
     {
         return false;
     }
+
+    /**
+     * Determine whether the user can like the post.
+     */
+    public function like(User $user, Post $post): Response
+    {
+        // Prevent users from liking their own posts
+        if ($post->user_id === $user->id) {
+            return Response::deny('You cannot like your own post.');
+        }
+
+        return Response::allow();
+    }
 }
