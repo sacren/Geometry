@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class LikeController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Record a like by the authenticated user on the given post.
      *
@@ -20,9 +23,7 @@ class LikeController extends Controller
     public function store(Post $post): RedirectResponse
     {
         // 🔒 Prevent liking own post
-        if ($post->user_id === Auth::id()) {
-            return back()->with('error', 'You cannot like your own post.');
-        }
+        $this->authorize('like', $post);
 
         $post->likes()->firstOrCreate(['user_id' => Auth::id()]);
         return back();
@@ -39,9 +40,7 @@ class LikeController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         // 🔒 Prevent liking own post
-        if ($post->user_id === Auth::id()) {
-            return back()->with('error', 'You cannot like your own post.');
-        }
+        $this->authorize('like', $post);
 
         $post->likes()->where('user_id', Auth::id())->delete();
         return back();
