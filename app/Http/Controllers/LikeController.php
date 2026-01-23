@@ -5,12 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class LikeController extends Controller
 {
-    use AuthorizesRequests;
-
     /**
      * Record a like by the authenticated user on the given post.
      *
