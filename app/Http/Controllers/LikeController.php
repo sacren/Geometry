@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
@@ -15,14 +17,35 @@ class LikeController extends Controller
      * due to the unique constraint on (user_id, post_id) in the likes table.
      *
      * @param  Post  $post  The post to be liked
-     * @return RedirectResponse Redirects back to the previous page
+     * @return JsonResponse|RedirectResponse
      */
-    public function store(Post $post): RedirectResponse
+    public function store(Post $post, Request $request)
     {
-        // 🔒 Prevent liking own post
         $this->authorize('like', $post);
 
-        $post->likes()->firstOrCreate(['user_id' => Auth::id()]);
+        $user = Auth::user();
+
+        // Check if like already exists
+        $existingLike = $post->likes()->where('user_id', $user->id)->first();
+
+        if (!$existingLike) {
+            $post->likes()->create(['user_id' => $user->id]);
+            $isLiked = true;
+            $newCount = $post->likes()->count(); // Recalculate the count after adding the like
+        } else {
+            // Like already exists, return current state
+            $isLiked = true;
+            $newCount = $post->likes()->count(); // Return current count
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'liked' => $isLiked,
+                'likes_count' => $newCount,
+                'message' => 'Post liked successfully'
+            ], 200);
+        }
+
         return back();
     }
 
@@ -32,14 +55,30 @@ class LikeController extends Controller
      * If the user hasn't liked the post, this operation has no effect.
      *
      * @param  Post  $post  The post from which to remove the like
-     * @return RedirectResponse Redirects back to the previous page
+     * @return JsonResponse|RedirectResponse
      */
-    public function destroy(Post $post): RedirectResponse
+    public function destroy(Post $post, Request $request)
     {
-        // 🔒 Prevent liking own post
         $this->authorize('like', $post);
 
-        $post->likes()->where('user_id', Auth::id())->delete();
+        $user = Auth::user();
+        $wasLiked = $post->likes()->where('user_id', $user->id)->exists();
+
+        if ($wasLiked) {
+            $post->likes()->where('user_id', $user->id)->delete();
+            $newCount = $post->likes()->count(); // Recalculate the count after removing the like
+        } else {
+            $newCount = $post->likes()->count(); // Return current count
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'liked' => false,
+                'likes_count' => $newCount,
+                'message' => 'Like removed successfully'
+            ], 200);
+        }
+
         return back();
     }
 }
