@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -20,17 +21,35 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('user:id,name,email')
-            ->withCount('likes') // 👈 adds `likes_count` attribute
-            ->latest()
+        $userId = Auth::id(); // Get current user ID once
+
+        $postsQuery = Post::with('user:id,name,email')
+            ->withCount('likes'); // 👈 adds `likes_count` attribute
+
+        // If user is authenticated, check which posts they've liked
+        if ($userId) {
+            // Use join/subquery approach to determine if current user liked each post
+            $postsQuery->addSelect([
+                'liked_by_current_user' => Like::selectRaw('count(*) > 0')
+                    ->whereColumn('post_id', 'posts.id')
+                    ->where('user_id', $userId)
+            ]);
+        } else {
+            // If not authenticated, none of the posts are liked by current user
+            $postsQuery->selectRaw('*, false as liked_by_current_user');
+        }
+
+        $posts = $postsQuery->latest()
             ->paginate(3)
             ->withQueryString();
 
-        // 👇 Add `liked_by_current_user` to each post
-        $posts->getCollection()->transform(function ($post) {
-            $post->liked_by_current_user = $post->likedByCurrentUser();
-            return $post;
-        });
+        // If user is not authenticated, ensure the attribute is properly set
+        if (!$userId) {
+            $posts->getCollection()->transform(function ($post) {
+                $post->liked_by_current_user = false;
+                return $post;
+            });
+        }
 
         return Inertia::render('posts/Index', [
             'posts' => $posts,
