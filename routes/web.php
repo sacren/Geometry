@@ -23,8 +23,10 @@ Route::resource('posts', PostController::class)
 // 👇 LIKE/UNLIKE ROUTES — nested, semantic, and secured
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/posts/{post}/likes', [LikeController::class, 'store'])
+        ->middleware('throttle:likes')
         ->name('posts.like');
     Route::delete('/posts/{post}/likes', [LikeController::class, 'destroy'])
+        ->middleware('throttle:likes')
         ->name('posts.unlike');
 });
 

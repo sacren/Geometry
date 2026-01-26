@@ -87,5 +87,12 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)->by($throttleKey);
         });
+
+        RateLimiter::for('likes', function (Request $request) {
+            $user = $request->user();
+            $key = $user ? 'likes:user:'.$user->getAuthIdentifier() : 'likes:ip:'.$request->ip();
+
+            return Limit::perMinute(10)->by($key);
+        });
     }
 }
