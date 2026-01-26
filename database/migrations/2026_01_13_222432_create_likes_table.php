@@ -19,6 +19,10 @@ return new class extends Migration
 
             // Prevent duplicate likes
             $table->unique(['user_id', 'post_id']);
+
+            // Indexes for efficient chronological queries
+            $table->index(['user_id', 'created_at']);  // For user's recent activity
+            $table->index(['post_id', 'created_at']);  // For post's recent likes
         });
     }
 
