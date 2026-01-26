@@ -32,7 +32,7 @@ class PostController extends Controller
             $postsQuery->addSelect([
                 'liked_by_current_user' => Like::selectRaw('count(*) > 0')
                     ->whereColumn('post_id', 'posts.id')
-                    ->where('user_id', $userId)
+                    ->byUser($userId)
             ]);
         } else {
             // If not authenticated, none of the posts are liked by current user

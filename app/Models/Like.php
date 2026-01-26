@@ -35,4 +35,28 @@ class Like extends Model
     {
         return $this->belongsTo(Post::class);
     }
+
+    /**
+     * Scope a query to only include likes by a given user.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    /**
+     * Scope a query to only include likes for a given post.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $postId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForPost($query, $postId)
+    {
+        return $query->where('post_id', $postId);
+    }
 }
