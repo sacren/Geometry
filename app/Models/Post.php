@@ -23,6 +23,9 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'content',
+        'published_at',
+        'is_published',
+        'meta_data',
     ];
 
     /**
