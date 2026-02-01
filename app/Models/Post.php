@@ -29,6 +29,20 @@ class Post extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime', // Convert to a Carbon instance
+            'is_published' => 'boolean', // Convert to a boolean
+            'meta_data' => 'array', // Convert to a JSON array
+        ];
+    }
+
+    /**
      * Get the user that owns the post.
      *
      * @return BelongsTo<User, self>
