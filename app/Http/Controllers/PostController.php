@@ -24,7 +24,13 @@ class PostController extends Controller
         $userId = Auth::id(); // Get current user ID once
 
         $postsQuery = Post::with('user:id,name,email')
-            ->withCount('likes'); // 👈 adds `likes_count` attribute
+            ->withCount('likes') // 👈 adds `likes_count` attribute
+            ->where('is_published', true) // Use boolean cast to filter published posts
+            ->where(function ($query) {
+                // only show posts that are published in the past or have no published date
+                $query->where('published_at', '<=', now())
+                      ->orWhereNull('published_at');
+            });
 
         // If user is authenticated, check which posts they've liked
         if ($userId) {
