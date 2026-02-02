@@ -13,7 +13,9 @@ class PostPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        // Allow all authenticated users with verified email to view posts list
+        // Assuming that having a verified email indicates an active account
+        return $user->hasVerifiedEmail();
     }
 
     /**
@@ -21,6 +23,21 @@ class PostPolicy
      */
     public function view(User $user, Post $post): bool
     {
+        // Post owners can always view their own posts
+        if ($user->id === $post->user_id) {
+            return true;
+        }
+
+        // Published posts are publicly visible
+        if ($post->published ?? false) {
+            return true;
+        }
+
+        // Admins and moderators can view any posts (if role system exists)
+        if (method_exists($user, 'hasRole')) {
+            return $user->hasRole(['admin', 'moderator']);
+        }
+
         return false;
     }
 
