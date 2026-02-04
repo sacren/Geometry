@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        // Create additional demo users
+        User::factory(4)->create();
+
         $this->call([
             PostSeeder::class,
         ]);
