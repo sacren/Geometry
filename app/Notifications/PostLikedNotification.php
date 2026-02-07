@@ -19,8 +19,12 @@ class PostLikedNotification extends Notification
 
     /**
      * Get the notification's delivery channels.
+     *
+     * This method must accept the $notifiable parameter as part of the interface contract,
+     * but it's common not to use it directly in the implementation. Many notifications
+     * use the same channels regardless of who receives them.
      */
-    public function via(object $notifiable): array
+    public function via(object $_notifiable): array
     {
         return ['mail'];
     }
@@ -41,10 +45,11 @@ class PostLikedNotification extends Notification
     /**
      * Get the array representation of the notification.
      */
-    public function toArray(object $_notifiable): array
+    public function toArray(object $notifiable): array
     {
         return [
             'post_id' => $this->post->id,
+            'recipient_id' => $notifiable->id,  // Using the notifiable parameter
             'liker_id' => $this->liker->id,
             'liker_name' => $this->liker->name,
             'post_content' => $this->post->content,
