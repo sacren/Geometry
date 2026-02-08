@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Notifications\PostLikedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,6 +33,11 @@ class LikeController extends Controller
             $post->likes()->create(['user_id' => $user->id]);
             $isLiked = true;
             $newCount = $post->likes()->count(); // Recalculate the count after adding the like
+
+            // Send notification to post owner if the liker is not the post owner
+            if ($post->user_id !== $user->id) {
+                $post->user->notify(new PostLikedNotification($post, $user));
+            }
         } else {
             // Like already exists, return current state
             $isLiked = true;
