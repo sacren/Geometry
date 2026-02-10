@@ -40,7 +40,7 @@ class PostLikedNotification extends Notification implements ShouldQueue
             ->view('emails.post-liked', [
                 'userName' => $notifiable->name,
                 'likerName' => $this->liker->name,
-                'postTitle' => $this->post->title ?? 'Untitled Post',
+                'postTitle' => \Illuminate\Support\Str::limit(strip_tags($this->post->content), 50, '...') ?: 'Untitled Post',
                 'postContent' => $this->post->content,
                 'postUrl' => url("/posts/{$this->post->id}")
             ]);
