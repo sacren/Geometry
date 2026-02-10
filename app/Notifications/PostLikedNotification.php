@@ -37,10 +37,13 @@ class PostLikedNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject("Your post was liked!")
-            ->greeting("Hello {$notifiable->name},")
-            ->line("{$this->liker->name} liked your post: '{$this->post->content}'")
-            ->action('View Post', url("/posts/{$this->post->id}"))
-            ->line('Thank you for using our application!');
+            ->view('emails.post-liked', [
+                'userName' => $notifiable->name,
+                'likerName' => $this->liker->name,
+                'postTitle' => $this->post->title ?? 'Untitled Post',
+                'postContent' => $this->post->content,
+                'postUrl' => url("/posts/{$this->post->id}")
+            ]);
     }
 
     /**
