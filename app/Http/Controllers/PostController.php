@@ -77,7 +77,12 @@ class PostController extends Controller
     {
         $user = Auth::user();
         assert($user instanceof User);
-        $user->posts()->create($request->validated());
+
+        $postData = $request->validated();
+        $postData['published_at'] = now();
+        $postData['is_published'] = true;
+
+        $user->posts()->create($postData);
 
         return to_route('posts.index')->with('success', 'Post created successfully.');
     }
